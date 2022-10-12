@@ -1,7 +1,7 @@
 import socket
 import threading
 
-input("Enter your username: ")
+username = input("Enter your username: ")
 
 host = '127.0.0.1'
 port = 55555

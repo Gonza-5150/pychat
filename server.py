@@ -20,7 +20,7 @@ def broadcast(message, _client):
 
 
 
-def handle_message(client):
+def handle_messages(client):
     while True:
         try:
             message = client.recv(1024)
@@ -34,12 +34,21 @@ def handle_message(client):
             client.close()
 
 def recive_connections():
-    client, addres = server.accept()
-    client.send("@username".encode('utf-8'))
-    username = client.recv(1024).decode('utf-8')
+    while True:
+        client, addres = server.accept()
+        client.send("@username".encode('utf-8'))
+        username = client.recv(1024).decode('utf-8')
 
-    clients.append(client)
-    usernames.append(username)
+        clients.append(client)
+        usernames.append(username)
 
-    print(f"{username}is connected with {str(addres)}")
-    
+        print(f"{username}is connected with {str(addres)}")
+
+        message = f"ChatBot: {username} joined the chat".encode('utf-8')
+        broadcast(message, _client)
+        client.send("connected to the server".encode('utf-8'))
+
+        thread = threading.Thread(target=handle_messages, args=(client,)) 
+        thread.start()
+
+recive_connections()
